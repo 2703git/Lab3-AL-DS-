@@ -1,86 +1,144 @@
 #include <iostream>
-#include <chrono>
-#include <cstdlib>
 using namespace std;
-using namespace std::chrono;
-//Problem 1
-    // int arraySum(int A[], int n) {
-    //     int sum = 0;
-    //     for (int i = 0; i < n; i++) {
-    //         sum += A[i];
-    //     }
-    //     return sum;
-    // }
-    // int main() {
-    //     int n = 500000;
-    //     int *A = new int[n];
-    //     for (int i = 0; i < n; i++) {
-    //         A[i] = rand();
-    //     }
-    //     auto start = high_resolution_clock::now();
-    //     int result = arraySum(A, n);
-    //     auto end = high_resolution_clock::now();
-    //     auto duration = duration_cast<microseconds>(end - start);
-    //     cout<<"Time taken: "<<duration.count()<<" microseconds"<<endl;
-    //     delete [] A;
-    //     return 0;
-    // }
 
-//Problem 2
-// int linearSearch(int A[], int n, int key) {
-//     for (int i = 0; i < n; i++) {
-//         if (A[i] == key) return i;
-//     }
-//     return -1;
-// }
-// int main () {
-//     int n = 20000;
-//     int *A = new int[n];
-//     for (int i = 0; i < n; i++) {
-//         A[i] = rand();
-//     }
-//     auto start = high_resolution_clock::now();
-//     linearSearch(A, n, A[0]);
-//     auto end = high_resolution_clock::now();
-//     auto duration = duration_cast<microseconds>(end - start);
-//     cout<<"Best case: "<<duration.count()<<" microseconds"<<endl;
-//
-//     start = high_resolution_clock::now();
-//     linearSearch(A, n, A[n/2]);
-//     end = high_resolution_clock::now();
-//     duration = duration_cast<microseconds>(end - start);
-//     cout<<"Average case: "<<duration.count()<<" microseconds"<<endl;
-//
-//     start = high_resolution_clock::now();
-//     linearSearch(A, n, 19999);
-//     end = high_resolution_clock::now();
-//     duration = duration_cast<microseconds>(end - start);
-//     cout<<"Worst case: "<<duration.count()<<" microseconds"<<endl;
-// }
-
-//Problem 3
-void bubbleSearch(int A[], int n) {
-    for (int i = 0; i < n-1; i++) {
-        for (int j = 0; j < n-i-1; j++) {
-            if (A[j] > A[j+1]) {
-                int temp = A[j];
-                A[j] = A[j+1];
-                A[j+1] = temp;
-            }
-        }
-    }
+struct Node {
+    int data;
+    Node* next;
+};
+Node* createNode(int value) {
+    Node* node = new Node;
+    node->data = value;
+    node->next = nullptr;
+    return node;
 }
-int main() {
-    int n = 20000;
-    int* A = new int[n];
-    for (int i = 0; i < n; i++) {
-        A[i] = rand();
+//Lab A - linked list traversal
+//Problem 1 A
+void printList(Node* head) {
+    if (head == nullptr) {
+        cout << "List is empty" << endl;
+        return;
     }
-    auto start = high_resolution_clock::now();
-    bubbleSearch(A, n);
-    auto stop = high_resolution_clock::now();
-    auto duration = duration_cast<microseconds>(stop - start);
-    cout<<"Bubble Search Time: "<<duration.count()<<endl;
-    delete [] A;
-    return 0;
+    Node* temp= head;
+    while (temp->next != nullptr) {
+        cout << temp->data << " ";
+        temp = temp->next;
+    }
+    cout << temp->data << endl;
+    return;
+}
+//Problem 2 A
+bool searchValue(Node* head, int value) {
+    Node* temp = head;
+    while (temp != nullptr) {
+        if (temp->data == value) {
+            return true;
+        }
+        temp = temp->next;
+    }
+    return false;
+}
+//Problem 3 A
+int countNodes(Node* head) {
+    int count = 0;
+    Node* temp = head;
+    while (temp != nullptr) {
+        count++;
+        temp = temp->next;
+    }
+    return count;
+}
+//Lab B - linked list insertion
+//Problem 1 B
+void insertBeginning(Node* &head, int value) {
+    Node* newNode = createNode(value);
+    newNode->next = head;
+    head = newNode;
+}
+//Problem 2 B
+void insertEnd(Node* &head, int value) {
+    Node* newNode = createNode(value);
+    if (head == nullptr) {
+        head = newNode;
+        return;
+    }
+    Node* temp = head;
+    while (temp->next != nullptr) {
+        temp = temp->next;
+    }
+    temp->next = newNode;
+}
+//Problem 3 B
+void insertAtPosition(Node* &head, int value, int k) {
+    if (k<=0) {
+        cout<<"Wrong input"<<endl;
+    return;
+    }
+    if (k==1) {
+        insertBeginning(head, value);
+        return;
+    }
+    Node* temp = head;
+    for (int i=0; i<k-1 && temp != nullptr; i++) {
+        temp = temp->next;
+    }
+    if (temp == nullptr) {
+        cout<<"Wrong input"<<endl;
+        return;
+    }
+    Node* newNode = createNode(value);
+    newNode->next = temp->next;
+    temp->next = newNode;
+}
+//Lab C - linked list deletion
+//Problem 1 C
+void deleteBeginning(Node* &head) {
+    Node* temp = head;
+    head = head->next;
+    delete temp;
+}
+//Problem 2 C
+void deleteEnd(Node* &head) {
+
+}
+
+
+
+
+
+int main() {
+    //Node* head = nullptr; //Example for empty list
+    Node* head = createNode(10);    //example for: 10 20 30
+    head->next = createNode(20);
+    head->next->next = createNode(30);
+    // cout<<"Problem 1 A"<<endl;
+    // cout<<"Org list: ";
+    // printList(head);
+    // cout<<"\nProblem 2 A"<<endl;
+    // cout<<"Search 20: ";
+    // if (searchValue(head, 20)) {
+    //     cout<<"Found"<<endl;
+    // }else {
+    //     cout<<"Not Found"<<endl;
+    // }
+    // cout<<"\nProblem 3 A"<<endl;
+    // cout<<"Number of nodes: "<<countNodes(head)<<endl;
+    // cout<<"\nProblem 1 B:  "<<endl;
+    // insertBeginning(head, 5);
+    // cout<<"Insert 5: \nNew node: ";
+    // printList(head);
+    // cout<<"\nProblem 2 B: "<<endl;
+    // insertEnd(head, 40);
+    // cout<<"Insert 40: \nNew node: ";
+    // printList(head);
+    // cout<<"\nProblem 3 B: "<<endl;
+    // insertAtPosition(head, 15, 2);
+    // cout<<"Insert 15: \nNew node: ";
+    // printList(head);
+    // cout<<"\nProblem 1 C"<<endl;
+    // deleteBeginning(head);
+    // cout<<"New list: ";
+    // printList(head);
+    cout<<"\nProblem 2 C"<<endl;
+    
+
 }
